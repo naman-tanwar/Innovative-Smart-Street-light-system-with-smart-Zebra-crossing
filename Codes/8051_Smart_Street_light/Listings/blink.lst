@@ -1,0 +1,46 @@
+A51 MACRO ASSEMBLER  BLINK                                                                11/08/2022 11:32:45 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.2.7.0
+OBJECT MODULE PLACED IN C:\Users\naman\Desktop\blink.obj
+ASSEMBLER INVOKED BY: C:\Keil_v5\C51\BIN\A51.EXE E:\uVision projects\Blink\blink.asm SET(SMALL) DEBUG PRINT(.\Listings\b
+                      link.lst) OBJECT(C:\Users\naman\Desktop\blink.obj) EP
+
+LOC  OBJ            LINE     SOURCE
+
+0000                   1     ORG 00H                         ; Assembly Starts from 0000H.
+                       2     ; Main Program
+0000 75A0FF            3     START:  MOV P2, #0XFF           ; Move 11111111 to PORT1.
+0003 110E              4                     CALL WAIT       ; Call WAIT 
+0005 E5A0              5                     MOV A, P2       ; Move P1 value to ACC 
+0007 F4                6                     CPL A           ; Complement ACC
+0008 F5A0              7                     MOV P2, A       ; Move ACC value to P1
+000A 110E              8                     CALL WAIT       ; Call WAIT
+000C 80F2              9                     SJMP START      ; Jump to START
+000E 7A0A             10     WAIT:           MOV R2, #10     ; Load Register R2 with 10 (0x0A)
+0010 7BC8             11     WAIT1:  MOV R3, #200            ; Load Register R3 with 10 (0xC8)
+0012 7CC8             12     WAIT2:  MOV R4, #200            ; Load Register R4 with 10 (0xC8)
+0014 DCFE             13                     DJNZ R4, $      ; Decrement R4 till it is 0. Stay there if not 0.
+0016 DBFA             14                     DJNZ R3, WAIT2  ; Decrement R3 till it is 0. Jump to WAIT2 if not 0.
+0018 DAF6             15                     DJNZ R2, WAIT1  ; Decrement R2 till it is 0. Jump to WAIT1 if not 0.
+001A 22               16                     RET             ; Retu rn to Main Program
+                      17     END                             ; End Assembly
+A51 MACRO ASSEMBLER  BLINK                                                                11/08/2022 11:32:45 PAGE     2
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+P2 . . . . . . . .  D ADDR   00A0H   A   
+START. . . . . . .  C ADDR   0000H   A   
+WAIT . . . . . . .  C ADDR   000EH   A   
+WAIT1. . . . . . .  C ADDR   0010H   A   
+WAIT2. . . . . . .  C ADDR   0012H   A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)

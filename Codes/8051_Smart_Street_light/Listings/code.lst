@@ -1,0 +1,285 @@
+A51 MACRO ASSEMBLER  CODE                                                                 11/09/2022 14:09:13 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.2.7.0
+OBJECT MODULE PLACED IN .\Objects\code.obj
+ASSEMBLER INVOKED BY: C:\Keil_v5\C51\BIN\A51.EXE code.asm SET(SMALL) DEBUG PRINT(.\Listings\code.lst) OBJECT(.\Objects\c
+                      ode.obj) EP
+
+LOC  OBJ            LINE     SOURCE
+
+0000                   1     ORG 0000H
+0000 020020            2     LJMP TIMERSET
+                       3     ;-ISR-----TIMER 0
+000B                   4     ORG 000BH ;TIMER0 INTERUPT VECTOR TABLE
+000B 309009            5             JNB P1.0, DAYTIME;During daytime P1.0=0
+000E 209103            6             JB P1.1, CROSSON
+0011 C292              7             CLR P1.2
+0013 32                8             RETI
+0014 D292              9             CROSSON: SETB P1.2
+0016 32               10             RETI
+0017                  11             DAYTIME:
+0017 C292             12             CLR P1.2
+0019 E4               13             CLR A
+001A F580             14             MOV P0,A
+001C 3090F8           15             JNB P1.0, DAYTIME
+001F 32               16             RETI
+0020                  17     TIMERSET:
+0020 758902           18     MOV TMOD, #02H
+0023 758CAC           19     MOV TH0, #0ACH
+0026 75A882           20     MOV IE, #82H
+0029 D28C             21     SETB TR0
+002B 75A0FF           22     MOV P2,#0FFH ;P2 AS INPUT
+                      23     
+002E                  24     MAINLOOP:
+002E E4               25     CLR A
+002F F580             26     MOV P0,A
+0031 3090FA           27     JNB P1.0, MAINLOOP ;During daytime P1.0=0
+0034 20A717           28     JB P2.7,CHECK7
+0037 20A61B           29     JB P2.6,CHECK6
+003A 20A522           30     JB P2.5,CHECK5
+003D 20A429           31     JB P2.4,CHECK4
+0040 20A330           32     JB P2.3,CHECK3
+0043 20A237           33     JB P2.2,CHECK2
+0046 20A13E           34     JB P2.1,CHECK1
+0049 20A045           35     JB P2.0,CHECK0
+004C 80E0             36     SJMP MAINLOOP
+                      37     
+004E                  38     CHECK7:
+004E D287             39     SETB P0.7
+0050 20A645           40     JB P2.6, BACK
+0053 80F9             41     SJMP CHECK7
+                      42     
+0055                  43     CHECK6:
+0055 D286             44     SETB P0.6
+0057 20A742           45     JB P2.7, Forward
+005A 20A53B           46     JB P2.5, BACK
+005D 80F6             47     SJMP CHECK6
+                      48     
+005F                  49     CHECK5:
+005F D285             50     SETB P0.5
+0061 20A638           51     JB P2.6, Forward
+0064 20A431           52     JB P2.4, BACK
+0067 80F6             53     SJMP CHECK5
+                      54     
+0069                  55     CHECK4:
+0069 D284             56     SETB P0.4
+006B 20A52E           57     JB P2.5, Forward
+A51 MACRO ASSEMBLER  CODE                                                                 11/09/2022 14:09:13 PAGE     2
+
+006E 20A327           58     JB P2.3, BACK
+0071 80F6             59     SJMP CHECK4
+                      60     
+0073                  61     CHECK3:
+0073 D283             62     SETB P0.3
+0075 20A424           63     JB P2.4, Forward
+0078 20A21D           64     JB P2.2, BACK
+007B 80F6             65     SJMP CHECK3
+                      66     
+007D                  67     CHECK2:
+007D D282             68     SETB P0.2
+007F 20A31A           69     JB P2.3, Forward
+0082 20A113           70     JB P2.1, BACK
+0085 80F6             71     SJMP CHECK2
+                      72     
+0087                  73     CHECK1:
+0087 D281             74     SETB P0.1
+0089 20A210           75     JB P2.2, Forward
+008C 20A009           76     JB P2.0, BACK
+008F 80F6             77     SJMP CHECK1
+                      78     
+0091                  79     CHECK0:
+0091 D280             80     SETB P0.0
+0093 20A106           81     JB P2.1, Forward
+0096 80F9             82     SJMP CHECK0
+                      83     
+0098                  84     BACK:
+0098 8065             85     JMP Backward
+009A 80FC             86     SJMP BACK
+                      87     
+009C                  88     Forward:
+009C E4               89     CLR A
+009D F8               90     MOV R0,A 
+009E E4               91     LOOP:CLR A
+009F F580             92     MOV P0,A
+00A1 20A757           93     JB P2.7,LABEL8
+00A4 20A64E           94     JB P2.6,LABEL7
+00A7 20A543           95     JB P2.5,LABEL6
+00AA 20A438           96     JB P2.4,LABEL5
+00AD 20A32D           97     JB P2.3,LABEL4
+00B0 20A222           98     JB P2.2,LABEL3
+00B3 20A117           99     JB P2.1,LABEL2
+00B6 20A00C          100     JB P2.0,LABEL1
+00B9 08              101     INC R0
+00BA B8FE02          102     CJNE R0, #254, CHK
+00BD 80DF            103     SJMP LOOP
+00BF                 104     CHK:
+00BF 5002            105     JNC CH1
+00C1 80DB            106     SJMP LOOP
+00C3 012E            107     CH1: JMP MAINLOOP
+                     108     
+00C5                 109     LABEL1:
+00C5 D280            110     SETB P0.0
+00C7 D281            111     SETB P0.1
+00C9 D282            112     SETB P0.2
+00CB 80D1            113     SJMP LOOP
+00CD                 114     LABEL2:
+00CD D281            115     SETB P0.1
+00CF D282            116     SETB P0.2
+00D1 D283            117     SETB P0.3
+00D3 80C9            118     SJMP LOOP
+00D5                 119     LABEL3:
+00D5 D282            120     SETB P0.2
+00D7 D283            121     SETB P0.3
+00D9 D284            122     SETB P0.4
+00DB 80C1            123     SJMP LOOP
+A51 MACRO ASSEMBLER  CODE                                                                 11/09/2022 14:09:13 PAGE     3
+
+00DD                 124     LABEL4:
+00DD D283            125     SETB P0.3
+00DF D284            126     SETB P0.4
+00E1 D285            127     SETB P0.5
+00E3 80B9            128     SJMP LOOP
+00E5                 129     LABEL5:
+00E5 D284            130     SETB P0.4
+00E7 D285            131     SETB P0.5
+00E9 D286            132     SETB P0.6
+00EB 80B1            133     SJMP LOOP
+00ED                 134     LABEL6:
+00ED D285            135     SETB P0.5
+00EF D286            136     SETB P0.6
+00F1 D287            137     SETB P0.7
+00F3 80A9            138     SJMP LOOP
+00F5                 139     LABEL7:
+00F5 D286            140     SETB P0.6
+00F7 D287            141     SETB P0.7
+00F9 80A3            142     SJMP LOOP
+00FB                 143     LABEL8:
+00FB D287            144     SETB P0.7
+00FD 809F            145     SJMP LOOP
+                     146     
+                     147     ;---------------
+                     148     
+00FF                 149     Backward:
+00FF E4              150     CLR A
+0100 F8              151     MOV R0,A 
+0101 E4              152     LOOP2:CLR A
+0102 F580            153     MOV P0,A
+0104 20A023          154     JB P2.0,LABEL12
+0107 20A124          155     JB P2.1,LABEL22
+010A 20A227          156     JB P2.2,LABEL32
+010D 20A32C          157     JB P2.3,LABEL42
+0110 20A431          158     JB P2.4,LABEL52
+0113 20A536          159     JB P2.5,LABEL62
+0116 20A63B          160     JB P2.6,LABEL72
+0119 20A740          161     JB P2.7,LABEL82
+011C 08              162     INC R0
+011D B8FE02          163     CJNE R0, #254, CHK2
+0120 80DF            164     SJMP LOOP2
+0122                 165     CHK2:
+0122 5002            166     JNC CH2
+0124 80DB            167     SJMP LOOP2
+0126 012E            168     CH2: JMP MAINLOOP
+0128 80D7            169     SJMP LOOP2
+                     170     
+012A                 171     LABEL12:
+012A D280            172     SETB P0.0
+012C 80D3            173     SJMP LOOP2
+012E                 174     LABEL22:
+012E D281            175     SETB P0.1
+0130 D280            176     SETB P0.0
+0132 80CD            177     SJMP LOOP2
+0134                 178     LABEL32:
+0134 D282            179     SETB P0.2
+0136 D281            180     SETB P0.1
+0138 D280            181     SETB P0.0
+013A 80C5            182     SJMP LOOP2
+013C                 183     LABEL42:
+013C D283            184     SETB P0.3
+013E D282            185     SETB P0.2
+0140 D281            186     SETB P0.1
+0142 80BD            187     SJMP LOOP2
+0144                 188     LABEL52:
+0144 D284            189     SETB P0.4
+A51 MACRO ASSEMBLER  CODE                                                                 11/09/2022 14:09:13 PAGE     4
+
+0146 D283            190     SETB P0.3
+0148 D282            191     SETB P0.2
+014A 80B5            192     SJMP LOOP2
+014C                 193     LABEL62:
+014C D285            194     SETB P0.5
+014E D284            195     SETB P0.4
+0150 D283            196     SETB P0.3
+0152 80AD            197     SJMP LOOP2
+0154                 198     LABEL72:
+0154 D286            199     SETB P0.6
+0156 D285            200     SETB P0.5
+0158 D284            201     SETB P0.4
+015A 80A5            202     SJMP LOOP2
+015C                 203     LABEL82:
+015C D287            204     SETB P0.7
+015E D286            205     SETB P0.6
+0160 D285            206     SETB P0.5
+0162 809D            207     SJMP LOOP2
+                     208     
+                     209     
+                     210     
+                     211     END
+A51 MACRO ASSEMBLER  CODE                                                                 11/09/2022 14:09:13 PAGE     5
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+BACK . . . . . . .  C ADDR   0098H   A   
+BACKWARD . . . . .  C ADDR   00FFH   A   
+CH1. . . . . . . .  C ADDR   00C3H   A   
+CH2. . . . . . . .  C ADDR   0126H   A   
+CHECK0 . . . . . .  C ADDR   0091H   A   
+CHECK1 . . . . . .  C ADDR   0087H   A   
+CHECK2 . . . . . .  C ADDR   007DH   A   
+CHECK3 . . . . . .  C ADDR   0073H   A   
+CHECK4 . . . . . .  C ADDR   0069H   A   
+CHECK5 . . . . . .  C ADDR   005FH   A   
+CHECK6 . . . . . .  C ADDR   0055H   A   
+CHECK7 . . . . . .  C ADDR   004EH   A   
+CHK. . . . . . . .  C ADDR   00BFH   A   
+CHK2 . . . . . . .  C ADDR   0122H   A   
+CROSSON. . . . . .  C ADDR   0014H   A   
+DAYTIME. . . . . .  C ADDR   0017H   A   
+FORWARD. . . . . .  C ADDR   009CH   A   
+IE . . . . . . . .  D ADDR   00A8H   A   
+LABEL1 . . . . . .  C ADDR   00C5H   A   
+LABEL12. . . . . .  C ADDR   012AH   A   
+LABEL2 . . . . . .  C ADDR   00CDH   A   
+LABEL22. . . . . .  C ADDR   012EH   A   
+LABEL3 . . . . . .  C ADDR   00D5H   A   
+LABEL32. . . . . .  C ADDR   0134H   A   
+LABEL4 . . . . . .  C ADDR   00DDH   A   
+LABEL42. . . . . .  C ADDR   013CH   A   
+LABEL5 . . . . . .  C ADDR   00E5H   A   
+LABEL52. . . . . .  C ADDR   0144H   A   
+LABEL6 . . . . . .  C ADDR   00EDH   A   
+LABEL62. . . . . .  C ADDR   014CH   A   
+LABEL7 . . . . . .  C ADDR   00F5H   A   
+LABEL72. . . . . .  C ADDR   0154H   A   
+LABEL8 . . . . . .  C ADDR   00FBH   A   
+LABEL82. . . . . .  C ADDR   015CH   A   
+LOOP . . . . . . .  C ADDR   009EH   A   
+LOOP2. . . . . . .  C ADDR   0101H   A   
+MAINLOOP . . . . .  C ADDR   002EH   A   
+P0 . . . . . . . .  D ADDR   0080H   A   
+P1 . . . . . . . .  D ADDR   0090H   A   
+P2 . . . . . . . .  D ADDR   00A0H   A   
+TH0. . . . . . . .  D ADDR   008CH   A   
+TIMERSET . . . . .  C ADDR   0020H   A   
+TMOD . . . . . . .  D ADDR   0089H   A   
+TR0. . . . . . . .  B ADDR   0088H.4 A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)
