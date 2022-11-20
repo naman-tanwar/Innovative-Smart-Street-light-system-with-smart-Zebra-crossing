@@ -8,3 +8,6 @@ Can detect the direction of vehicle movement and sense if a person is crossing t
 
 # PCB
 ![N|Solid](https://raw.githubusercontent.com/naman-tanwar/Innovative-Smart-Street-light-system-with-smart-Zebra-crossing/main/Final%20Results/Images/PCB.jpg)
+
+# 3D Render
+![N|Solid](https://raw.githubusercontent.com/naman-tanwar/Innovative-Smart-Street-light-system-with-smart-Zebra-crossing/main/Design/3D%20and%20Laser%20Cut%20Designs/RENDERS/Assembly_with_support_2022-Aug-28.png)
